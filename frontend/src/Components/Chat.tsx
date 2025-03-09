@@ -17,7 +17,7 @@ function Chat() {
         <ChatCard message="hey" />
         <ChatCard message="hey" />
       </div>
-      <div className="bottom-5 absolute w-full flex justify-center">
+      <div className="bottom-3 absolute w-full flex justify-center">
         <input
           type="text"
           placeholder="Enter your message"

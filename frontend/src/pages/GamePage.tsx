@@ -17,7 +17,7 @@ function GamePage() {
         <Board />
       </div>
       {/* leaderboard char */}
-      <div className="w-full flex h-[45vh]">
+      <div className="w-full flex h-[41vh]">
         <LeaderBoard />
         <Chat />
       </div>
