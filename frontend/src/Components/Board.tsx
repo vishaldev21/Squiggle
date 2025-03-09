@@ -27,7 +27,7 @@ function Board() {
           //   setEditor(editor);
 
           // Listen for store updates
-          editor.store.listen(() => console.log(getSnapshot(editor.store)));
+          editor.store.listen(() => getSnapshot(editor.store));
         }}
       />
     </div>

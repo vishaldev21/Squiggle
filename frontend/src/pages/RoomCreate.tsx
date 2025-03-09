@@ -2,10 +2,12 @@ import { generateSlug } from "random-word-slugs";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { useUserContext } from "../Context/UserContext";
 
 function RoomCreate() {
   const [roomName, setRoomName] = useState("");
   const [userName, setUserName] = useState("");
+  const { setUsername: setUsernameContext } = useUserContext();
   const navigate = useNavigate();
 
   const createRoom = () => {
@@ -13,12 +15,18 @@ function RoomCreate() {
       toast.error("Please provide your name");
       return;
     }
+    setUsernameContext(userName);
     const generatedRoomName = generateSlug(2);
-    navigate(`/${generatedRoomName}`, { state: { userName } });
+    navigate(`/${generatedRoomName}`);
   };
 
   const joinRoom = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
+    if (userName === "") {
+      toast.error("Please provide your name");
+      return;
+    }
+    setUsernameContext(userName);
     navigate(`/${roomName}`);
   };
 

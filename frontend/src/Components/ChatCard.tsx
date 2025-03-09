@@ -1,7 +1,15 @@
-function ChatCard({ message }: { message: string }) {
+function ChatCard({
+  message,
+  declaration,
+  user,
+}: {
+  message: string;
+  declaration: boolean;
+  user: string;
+}) {
   return (
     <div className="flex gap-1 bg-base-300 p-1">
-      <p className="text-sm">User:</p>
+      {declaration ? "" : <p className="text-sm">{`${user}:`}</p>}
       <p className="text-sm">{message}</p>
     </div>
   );
