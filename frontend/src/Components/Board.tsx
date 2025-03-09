@@ -1,4 +1,4 @@
-import { getSnapshot, Tldraw, loadSnapshot, Editor } from "tldraw";
+import { getSnapshot, Tldraw } from "tldraw";
 import "tldraw/tldraw.css";
 
 function Board() {
@@ -16,7 +16,10 @@ function Board() {
   //     loadSnapshot(editor?.store!, JSON.parse(snapshot));
   //   }, [editor]);
   return (
-    <div style={{ position: "fixed", inset: 0 }} className="h-[50%]">
+    <div
+      style={{ width: "100%", height: "50vh", position: "relative" }}
+      className="h-[50%]"
+    >
       <Tldraw
         inferDarkMode
         forceMobile
