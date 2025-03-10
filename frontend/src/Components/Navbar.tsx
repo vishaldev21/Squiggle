@@ -1,6 +1,17 @@
 import { FcAlarmClock } from "react-icons/fc";
+import { useUserContext } from "../Context/UserContext";
+import toast from "react-hot-toast";
 
 function Navbar() {
+  const { clients, username } = useUserContext();
+  const clickHandler = () => {
+    if (clients && clients.length <= 1) {
+      toast.error("Room has only 1 player");
+      return;
+    }
+    // add rest logic
+  };
+  console.log("navbar", clients);
   return (
     <div className="h-[8vh] p-2 flex">
       <div className="flex gap-2 items-center">
@@ -16,6 +27,11 @@ function Navbar() {
           <p className="text-neutral-content font-extrabold text-xl">-</p>
         </div>
       </div>
+      {clients && clients[0]?.username === username && (
+        <button className="btn btn-success" onClick={() => clickHandler()}>
+          Start
+        </button>
+      )}
     </div>
   );
 }

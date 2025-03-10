@@ -14,7 +14,7 @@ type TMessage = {
 
 function Chat() {
   const { socket } = useSocketContext();
-  const { username } = useUserContext();
+  const { username, setClients } = useUserContext();
   const { roomId } = useParams();
   const [chats, setChats] = useState<TMessage[]>([]);
   const [message, setMessage] = useState<string>("");
@@ -39,7 +39,8 @@ function Chat() {
 
   useEffect(() => {
     if (socket) {
-      socket.on(ACTIONS.JOINED, ({ username: userJoined }) => {
+      socket.on(ACTIONS.JOINED, ({ clients, username: userJoined }) => {
+        setClients(clients);
         if (userJoined !== username) {
           setChats((pre) => [
             ...pre,
