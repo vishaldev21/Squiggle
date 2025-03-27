@@ -4,12 +4,15 @@ import "./index.css";
 import App from "./App.tsx";
 import SocketContextProvider from "./Context/SocketContextProvider.tsx";
 import UserContextProvider from "./Context/UserContextProvider.tsx";
+import GameContextProvider from "./Context/GameContextProvider.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <SocketContextProvider>
       <UserContextProvider>
-        <App />
+        <GameContextProvider>
+          <App />
+        </GameContextProvider>
       </UserContextProvider>
     </SocketContextProvider>
   </StrictMode>

@@ -5,6 +5,7 @@ import { ACTIONS } from "../utils/Actions";
 import { useUserContext } from "../Context/UserContext";
 import { Socket } from "socket.io-client";
 import { useParams } from "react-router-dom";
+import { useGameContext } from "../Context/GameContext";
 
 type TMessage = {
   user: string;
@@ -18,6 +19,8 @@ function Chat() {
   const { roomId } = useParams();
   const [chats, setChats] = useState<TMessage[]>([]);
   const [message, setMessage] = useState<string>("");
+  const { setAccessUser, setPlayerLeaderBoard, playerLeaderBoard } =
+    useGameContext();
 
   const submitHandler = (socket: Socket | null) => {
     if (!username || !socket) {
@@ -39,20 +42,47 @@ function Chat() {
 
   useEffect(() => {
     if (socket) {
-      socket.on(ACTIONS.JOINED, ({ clients, username: userJoined }) => {
-        setClients(clients);
-        if (userJoined !== username) {
-          setChats((pre) => [
-            ...pre,
-            {
-              user: userJoined,
-              message: `${userJoined} joined`,
-              declaration: true,
-            },
-          ]);
+      socket.on(
+        ACTIONS.JOINED,
+        ({ clients, username: userJoined, socketId }) => {
+          setClients(clients);
+          setAccessUser(clients[0]);
+          if (userJoined !== username) {
+            setPlayerLeaderBoard((pre) => [
+              ...pre,
+              {
+                name: userJoined,
+                ranking: playerLeaderBoard.length + 1,
+                points: 0,
+              },
+            ]);
+            if (clients[0]?.username === username) {
+              socket.emit(ACTIONS.LEADERBOARD_INFO, {
+                socketId,
+                leaderBoard: [
+                  ...playerLeaderBoard,
+                  {
+                    name: userJoined,
+                    ranking: playerLeaderBoard.length + 1,
+                    points: 0,
+                  },
+                ],
+              });
+            }
+            setChats((pre) => [
+              ...pre,
+              {
+                user: userJoined,
+                message: `${userJoined} joined`,
+                declaration: true,
+              },
+            ]);
+          }
         }
+      );
+      socket.on(ACTIONS.LEADERBOARD_INFO, ({ leaderBoard }) => {
+        setPlayerLeaderBoard(leaderBoard);
       });
-
       socket.on(ACTIONS.SEND_MESSAGE, ({ user, message, declaration }) => {
         if (user !== username) {
           setChats((pre) => [...pre, { user, message, declaration }]);

@@ -3,12 +3,14 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useUserContext } from "../Context/UserContext";
+import { useGameContext } from "../Context/GameContext";
 
 function RoomCreate() {
   const [roomName, setRoomName] = useState("");
   const [userName, setUserName] = useState("");
   const { setUsername: setUsernameContext } = useUserContext();
   const navigate = useNavigate();
+  const { setPlayerLeaderBoard } = useGameContext();
 
   const createRoom = () => {
     if (userName === "") {
@@ -17,6 +19,9 @@ function RoomCreate() {
     }
     setUsernameContext(userName);
     const generatedRoomName = generateSlug(2);
+    setPlayerLeaderBoard([{ name: userName, points: 0, ranking: 1 }]);
+    navigator.clipboard.writeText(generatedRoomName);
+    toast.success("Room name copied");
     navigate(`/${generatedRoomName}`);
   };
 

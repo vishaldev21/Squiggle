@@ -44,6 +44,9 @@ io.on("connection", (socket) => {
       .to(roomId)
       .emit(ACTIONS.SEND_MESSAGE, { user, message, declaration });
   });
+  socket.on(ACTIONS.LEADERBOARD_INFO, ({ socketId, leaderBoard }) => {
+    io.to(socketId).emit(ACTIONS.LEADERBOARD_INFO, { leaderBoard });
+  });
 });
 
 console.log(`listening on port ${process.env.PORT}`);
