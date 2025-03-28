@@ -89,7 +89,19 @@ function Chat() {
         }
       });
     }
-  }, [socket, username]);
+    return () => {
+      socket?.off(ACTIONS.JOINED);
+      socket?.off(ACTIONS.LEADERBOARD_INFO);
+      socket?.off(ACTIONS.SEND_MESSAGE);
+    };
+  }, [
+    playerLeaderBoard,
+    setAccessUser,
+    setClients,
+    setPlayerLeaderBoard,
+    socket,
+    username,
+  ]);
   return (
     <div className="w-1/2 h-full relative">
       <div className="h-[80%] overflow-auto space-y-2 p-2">
