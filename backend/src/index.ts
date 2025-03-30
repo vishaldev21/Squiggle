@@ -75,6 +75,17 @@ io.on("connection", (socket) => {
   socket.on(ACTIONS.GENERATE_WORD, ({ socketId }) => {
     io.to(socketId).emit(ACTIONS.GENERATE_WORD);
   });
+
+  socket.on(ACTIONS.BOARD_CHANGE, ({ roomId, boardData }) => {
+    socket.to(roomId).emit(ACTIONS.BOARD_CHANGE, { boardData });
+  });
+
+  socket.on(ACTIONS.REFRESH_BOARD, ({ roomId }) => {
+    const clients = getAllConnectedClients(roomId);
+    clients.forEach(({ socketId }) => {
+      io.to(socketId).emit(ACTIONS.REFRESH_BOARD);
+    });
+  });
 });
 
 console.log(`listening on port ${process.env.PORT}`);

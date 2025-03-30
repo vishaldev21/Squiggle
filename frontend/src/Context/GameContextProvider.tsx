@@ -1,6 +1,7 @@
 import { ReactNode, useState } from "react";
 import { GameContext, TLeaderBoardPlayerInfo } from "./GameContext";
 import { TClients } from "./UserContext";
+import { TLEditorSnapshot } from "tldraw";
 
 function GameContextProvider({ children }: { children: ReactNode }) {
   const [accessUser, setAccessUser] = useState<TClients | null>(null);
@@ -9,6 +10,8 @@ function GameContextProvider({ children }: { children: ReactNode }) {
   >([]);
   const [gameStarted, setGameStarted] = useState(false);
   const [guessWord, setGuessWord] = useState<string | null>(null);
+  const [initialBoardState, setInitialBoardState] =
+    useState<TLEditorSnapshot | null>(null);
   return (
     <GameContext.Provider
       value={{
@@ -20,6 +23,8 @@ function GameContextProvider({ children }: { children: ReactNode }) {
         setGameStarted,
         guessWord,
         setGuessWord,
+        initialBoardState,
+        setInitialBoardState,
       }}
     >
       {children}

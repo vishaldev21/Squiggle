@@ -43,6 +43,7 @@ function Navbar() {
               socket?.emit(ACTIONS.GENERATE_WORD, {
                 socketId: currentClient.socketId,
               });
+              socket?.emit(ACTIONS.REFRESH_BOARD, { roomId });
             }
           }
         } else {

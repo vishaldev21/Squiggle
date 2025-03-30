@@ -1,5 +1,6 @@
 import { createContext, Dispatch, SetStateAction, useContext } from "react";
 import { TClients } from "./UserContext";
+import { TLEditorSnapshot } from "tldraw";
 
 export type TLeaderBoardPlayerInfo = {
   name: string;
@@ -17,6 +18,8 @@ type TGameContext = {
   setGameStarted: Dispatch<SetStateAction<boolean>>;
   guessWord: string | null;
   setGuessWord: Dispatch<SetStateAction<string | null>>;
+  initialBoardState: TLEditorSnapshot | null;
+  setInitialBoardState: Dispatch<SetStateAction<TLEditorSnapshot | null>>;
 };
 
 const GameContext = createContext<TGameContext>({
@@ -28,6 +31,8 @@ const GameContext = createContext<TGameContext>({
   setGameStarted: () => {},
   guessWord: null,
   setGuessWord: () => {},
+  initialBoardState: null,
+  setInitialBoardState: () => {},
 });
 
 const useGameContext = () => {

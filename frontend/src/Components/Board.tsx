@@ -1,20 +1,62 @@
-import { getSnapshot, Tldraw } from "tldraw";
+import { useEffect, useState } from "react";
+import { getSnapshot, Tldraw, Editor, loadSnapshot } from "tldraw";
 import "tldraw/tldraw.css";
+import { useGameContext } from "../Context/GameContext";
+import { useUserContext } from "../Context/UserContext";
+import { useSocketContext } from "../Context/SocketContext";
+import { ACTIONS } from "../utils/Actions";
+import { useParams } from "react-router-dom";
 
 function Board() {
-  //   const [editor, setEditor] = useState<Editor>();
-  //   const save = useCallback(() => {
-  //     const { document, session } = getSnapshot(editor?.store!);
-  //     localStorage.setItem("snapshot", JSON.stringify({ document, session }));
-  //   }, [editor]);
+  const [editor, setEditor] = useState<Editor | null>(null);
+  const { accessUser, setInitialBoardState, initialBoardState } =
+    useGameContext();
+  const { username } = useUserContext();
+  const { socket } = useSocketContext();
+  const { roomId } = useParams();
 
-  //   const load = useCallback(() => {
-  //     const snapshot = localStorage.getItem("snapshot");
-  //     if (!snapshot) return;
+  useEffect(() => {
+    if (accessUser?.username !== username && editor) {
+      editor.updateInstanceState({ isReadonly: true });
+    } else {
+      editor?.updateInstanceState({ isReadonly: false });
+    }
 
-  //     // [4]
-  //     loadSnapshot(editor?.store!, JSON.parse(snapshot));
-  //   }, [editor]);
+    if (editor) {
+      editor.store.listen(() => {
+        console.log(getSnapshot(editor.store));
+        socket?.emit(ACTIONS.BOARD_CHANGE, {
+          roomId,
+          boardData: getSnapshot(editor.store),
+        });
+      });
+    }
+
+    socket?.on(ACTIONS.BOARD_CHANGE, ({ boardData }) => {
+      if (editor) {
+        loadSnapshot(editor?.store, boardData);
+      }
+    });
+
+    socket?.on(ACTIONS.REFRESH_BOARD, () => {
+      console.log("called");
+      if (editor && initialBoardState) {
+        loadSnapshot(editor.store, initialBoardState);
+      }
+    });
+
+    return () => {
+      socket?.off(ACTIONS.BOARD_CHANGE);
+      socket?.off(ACTIONS.REFRESH_BOARD);
+    };
+  }, [
+    accessUser?.username,
+    editor,
+    initialBoardState,
+    roomId,
+    socket,
+    username,
+  ]);
   return (
     <div
       style={{ width: "100%", height: "50vh", position: "relative" }}
@@ -24,10 +66,8 @@ function Board() {
         inferDarkMode
         forceMobile
         onMount={(editor) => {
-          //   setEditor(editor);
-
-          // Listen for store updates
-          editor.store.listen(() => getSnapshot(editor.store));
+          setEditor(editor);
+          setInitialBoardState(getSnapshot(editor.store));
         }}
       />
     </div>

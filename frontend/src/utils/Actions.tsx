@@ -11,8 +11,8 @@ const ACTIONS = {
   TIME_UP: "time_up",
   GENERATE_WORD: "generate_word",
   INCREASE_ROUND_COUNT: "increase_round_count",
-  // INCREASE_MY_POINT: "increase_my_point",
-  // INCREASE_ACCESS_USER_POINT: "increase_access_user_point",
+  BOARD_CHANGE: "board_change",
+  REFRESH_BOARD: "refresh_board",
 };
 
 export { ACTIONS };
