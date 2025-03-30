@@ -15,18 +15,38 @@ type TMessage = {
 
 function Chat() {
   const { socket } = useSocketContext();
-  const { username, setClients } = useUserContext();
+  const { username, setClients, clients } = useUserContext();
   const { roomId } = useParams();
   const [chats, setChats] = useState<TMessage[]>([]);
   const [message, setMessage] = useState<string>("");
-  const { setAccessUser, setPlayerLeaderBoard, playerLeaderBoard } =
-    useGameContext();
+  const {
+    accessUser,
+    setAccessUser,
+    setPlayerLeaderBoard,
+    playerLeaderBoard,
+    guessWord,
+  } = useGameContext();
 
   const submitHandler = (socket: Socket | null) => {
     if (!username || !socket) {
       return;
     }
     if (!message.trim()) return;
+    if (message.toLowerCase() === guessWord) {
+      const newLeaderBoard = playerLeaderBoard.map((el) => {
+        if (el.name === username) {
+          el.gotCorrect = true;
+          el.points = el.points + 100;
+        }
+        if (el.name === accessUser?.username && clients) {
+          el.points = el.points + 100 / clients.length;
+        }
+        return el;
+      });
+      setPlayerLeaderBoard(newLeaderBoard);
+      socket.emit(ACTIONS.CORRECT_ANSWER, { username, roomId });
+      return;
+    }
     socket.emit(ACTIONS.SEND_MESSAGE, {
       user: username,
       message,
@@ -54,6 +74,7 @@ function Chat() {
                 name: userJoined,
                 ranking: playerLeaderBoard.length + 1,
                 points: 0,
+                gotCorrect: false,
               },
             ]);
             if (clients[0]?.username === username) {
@@ -120,6 +141,7 @@ function Chat() {
           type="text"
           placeholder="Enter your message"
           className="input w-3/4 mx-auto"
+          disabled={accessUser?.username === username}
           required
           value={message}
           onChange={(e) => setMessage(e.target.value)}

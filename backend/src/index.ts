@@ -47,6 +47,34 @@ io.on("connection", (socket) => {
   socket.on(ACTIONS.LEADERBOARD_INFO, ({ socketId, leaderBoard }) => {
     io.to(socketId).emit(ACTIONS.LEADERBOARD_INFO, { leaderBoard });
   });
+
+  socket.on(ACTIONS.GAME_STARTED, ({ roomId }) => {
+    socket.to(roomId).emit(ACTIONS.GAME_STARTED);
+  });
+
+  socket.on(ACTIONS.INCREASE_ROUND_COUNT, ({ roomId }) => {
+    socket.to(roomId).emit(ACTIONS.INCREASE_ROUND_COUNT);
+  });
+
+  socket.on(ACTIONS.GUESS_WORD, ({ roomId, guessWord }) => {
+    socket.to(roomId).emit(ACTIONS.GUESS_WORD, { guessWord });
+  });
+
+  socket.on(ACTIONS.COUNTDOWN_START, ({ roomId }) => {
+    socket.to(roomId).emit(ACTIONS.COUNTDOWN_START);
+  });
+
+  socket.on(ACTIONS.CORRECT_ANSWER, ({ username, roomId }) => {
+    socket.to(roomId).emit(ACTIONS.CORRECT_ANSWER, { username });
+  });
+
+  socket.on(ACTIONS.TIME_UP, ({ user, roomId }) => {
+    socket.to(roomId).emit(ACTIONS.TIME_UP, { user });
+  });
+
+  socket.on(ACTIONS.GENERATE_WORD, ({ socketId }) => {
+    io.to(socketId).emit(ACTIONS.GENERATE_WORD);
+  });
 });
 
 console.log(`listening on port ${process.env.PORT}`);

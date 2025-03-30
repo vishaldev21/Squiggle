@@ -7,6 +7,8 @@ function GameContextProvider({ children }: { children: ReactNode }) {
   const [playerLeaderBoard, setPlayerLeaderBoard] = useState<
     TLeaderBoardPlayerInfo[] | []
   >([]);
+  const [gameStarted, setGameStarted] = useState(false);
+  const [guessWord, setGuessWord] = useState<string | null>(null);
   return (
     <GameContext.Provider
       value={{
@@ -14,6 +16,10 @@ function GameContextProvider({ children }: { children: ReactNode }) {
         setAccessUser,
         playerLeaderBoard,
         setPlayerLeaderBoard,
+        gameStarted,
+        setGameStarted,
+        guessWord,
+        setGuessWord,
       }}
     >
       {children}

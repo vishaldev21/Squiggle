@@ -19,7 +19,9 @@ function RoomCreate() {
     }
     setUsernameContext(userName);
     const generatedRoomName = generateSlug(2);
-    setPlayerLeaderBoard([{ name: userName, points: 0, ranking: 1 }]);
+    setPlayerLeaderBoard([
+      { name: userName, points: 0, ranking: 1, gotCorrect: false },
+    ]);
     navigator.clipboard.writeText(generatedRoomName);
     toast.success("Room name copied");
     navigate(`/${generatedRoomName}`);
