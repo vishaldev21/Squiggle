@@ -24,11 +24,12 @@ function Board() {
 
     if (editor) {
       editor.store.listen(() => {
-        console.log(getSnapshot(editor.store));
-        socket?.emit(ACTIONS.BOARD_CHANGE, {
-          roomId,
-          boardData: getSnapshot(editor.store),
-        });
+        if (accessUser?.username === username) {
+          socket?.emit(ACTIONS.BOARD_CHANGE, {
+            roomId,
+            boardData: getSnapshot(editor.store),
+          });
+        }
       });
     }
 
