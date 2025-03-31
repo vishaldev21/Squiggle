@@ -29,7 +29,13 @@ function LeaderBoard() {
     return () => {
       socket?.off(ACTIONS.CORRECT_ANSWER);
     };
-  }, [playerLeaderBoard, setPlayerLeaderBoard, socket]);
+  }, [
+    accessUser?.username,
+    clients,
+    playerLeaderBoard,
+    setPlayerLeaderBoard,
+    socket,
+  ]);
   return (
     <div className="w-1/2 h-full overflow-auto border-r space-y-2 p-2">
       {playerLeaderBoard.map((el) => (

@@ -1,24 +1,24 @@
-import { generateSlug } from "random-word-slugs";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useUserContext } from "../Context/UserContext";
 import { useGameContext } from "../Context/GameContext";
+import { v4 as uuidv4 } from "uuid";
+import { uniqueNamesGenerator, names } from "unique-names-generator";
 
 function RoomCreate() {
   const [roomName, setRoomName] = useState("");
-  const [userName, setUserName] = useState("");
   const { setUsername: setUsernameContext } = useUserContext();
   const navigate = useNavigate();
   const { setPlayerLeaderBoard } = useGameContext();
 
   const createRoom = () => {
-    if (userName === "") {
-      toast.error("Please provide your name");
-      return;
-    }
+    const userName = uniqueNamesGenerator({
+      dictionaries: [names],
+      length: 1,
+    });
     setUsernameContext(userName);
-    const generatedRoomName = generateSlug(2);
+    const generatedRoomName = uuidv4().split("-")[0];
     setPlayerLeaderBoard([
       { name: userName, points: 0, ranking: 1, gotCorrect: false },
     ]);
@@ -29,10 +29,10 @@ function RoomCreate() {
 
   const joinRoom = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
-    if (userName === "") {
-      toast.error("Please provide your name");
-      return;
-    }
+    const userName = uniqueNamesGenerator({
+      dictionaries: [names],
+      length: 1,
+    });
     setUsernameContext(userName);
     navigate(`/${roomName}`);
   };
@@ -42,14 +42,6 @@ function RoomCreate() {
       <div className="card shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
         <form className="card-body">
           <div className="form-control flex flex-col gap-4">
-            <input
-              type="text"
-              placeholder="Enter your name"
-              className="input w-full"
-              required
-              value={userName}
-              onChange={(e) => setUserName(e.target.value)}
-            />
             <input
               type="text"
               placeholder="Enter room id"
